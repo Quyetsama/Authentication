@@ -7,6 +7,7 @@ const JWT = require('jsonwebtoken')
 //     userID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
 // })
 
+
 const encodedToken = (userID) => {
     return JWT.sign({
         iss: 'quyetsama',
