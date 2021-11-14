@@ -13,7 +13,7 @@ const encodedToken = (userID) => {
         iss: 'quyetsama',
         sub: userID,
         iat: new Date().getTime(),
-        exp: new Date().getDate(new Date().getDate() + 3)
+        exp: new Date().setDate(new Date().getDate() + 3)
     }, process.env.JWT_SECRET)
 }
 
@@ -107,21 +107,37 @@ class UserController{
 
         console.log(newUser)
         await newUser.save()
-
         const token = encodedToken(newUser._id)
-        res.setHeader('Authorization', token)
+        res.setHeader('Authorization', 'bearer ' + token)
 
-        return res.status(201).json({ success: true })
+        return res.status(201).json({ success: true, token: 'bearer ' + token })
     }
 
     // [POST] /user/sigupsignin
     async signIn(req, res, next){
-        console.log('signIn')
+        const token = encodedToken(req.user._id)
+
+        res.setHeader('Authorization', 'bearer ' + token)
+        return res.status(200).json({ success: true })
     }
 
     // [GET] /user/secret
     async secret(req, res, next){
-        console.log('Secret')
+        return res.status(200).json({ resources: true })
+    }
+
+    async authGoogle(req, res, next){
+        const token = encodedToken(req.user._id)
+
+        res.setHeader('Authorization', token)
+        return res.status(200).json({ success: true })
+    }
+
+    async authFacebook(req, res, next){
+        const token = encodedToken(req.user._id)
+
+        res.setHeader('Authorization', token)
+        return res.status(200).json({ success: true })
     }
 }
 

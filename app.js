@@ -1,12 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const logger = require('morgan')
 const route= require('./routes')
 const bodyParser = require('body-parser')
 const secureApp = require("helmet")
-require('dotenv').config()
 
 
-const db = require("./db");
+
+const db = require("./db")
 
 
 const app = express()
@@ -14,7 +15,9 @@ const app = express()
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(secureApp())
+app.set("view engine", "ejs")
 
+app.use(express.static("public"))
 
 db.connect()
 
@@ -29,7 +32,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     const error = app.get('env') === 'development' ? err : {}
     const status = err.status || 500
-    console.log(err)
+    // console.log(err)
     return res.status(status).json({
         error: {
             message: error.message
